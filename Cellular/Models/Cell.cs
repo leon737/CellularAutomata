@@ -12,11 +12,11 @@ namespace Cellular.Models
 
         private readonly int _timeToRelax;
 
-        private readonly int? _remainingTimeToRelax;
+        private int? _remainingTimeToRelax;
 
         private readonly int _timeToTakeSnapshot;
 
-        private readonly int? _remainingTimeToTakeSnapshot;
+        private int? _remainingTimeToTakeSnapshot;
 
         private readonly ITrackingField _trackingField;
 
@@ -39,40 +39,65 @@ namespace Cellular.Models
             }
         }
 
-        private Cell(Cell cell, CellStates newState) : this(cell._trackingField, cell._cellActuator, cell._timeToRelax, cell._timeToTakeSnapshot, newState)
+        //private Cell(Cell cell, CellStates newState) : this(cell._trackingField, cell._cellActuator, cell._timeToRelax, cell._timeToTakeSnapshot, newState)
+        //{
+        //    _patternMemos = cell._patternMemos;
+
+        //    if (newState == CellStates.Relaxed || newState == CellStates.RelaxedNegative)
+        //    {
+        //        _remainingTimeToRelax = cell._remainingTimeToRelax - 1;
+        //        _remainingTimeToTakeSnapshot = cell._remainingTimeToTakeSnapshot - 1;
+        //    }
+        //    if (_remainingTimeToRelax == 0)
+        //        _remainingTimeToRelax = null;
+        //    if (_remainingTimeToTakeSnapshot == 0)
+        //    {
+        //        _patternMemos.Add(TakeSnapshot());
+        //        _remainingTimeToTakeSnapshot = null;
+        //    }
+        //}
+
+        public CellStates State => _state;
+
+        public Cell Act(CellStates[] binaryField, int width, int height)
         {
-            _patternMemos = cell._patternMemos;
+            //return new Cell(this, EvaluateNewState(binaryField, width, height));
+            return SelfModify(EvaluateNewState(binaryField, width, height));
+        }
+
+        public Cell SelfModify(CellStates newState)
+        {
+            if (newState == CellStates.Active || newState == CellStates.Negative)
+            {
+                _remainingTimeToRelax = _timeToRelax;
+                _remainingTimeToTakeSnapshot = _timeToTakeSnapshot;
+            }
 
             if (newState == CellStates.Relaxed || newState == CellStates.RelaxedNegative)
             {
-                _remainingTimeToRelax = cell._remainingTimeToRelax - 1;
-                _remainingTimeToTakeSnapshot = cell._remainingTimeToTakeSnapshot - 1;
+                _remainingTimeToRelax--;
+                _remainingTimeToTakeSnapshot--;
             }
             if (_remainingTimeToRelax == 0)
                 _remainingTimeToRelax = null;
             if (_remainingTimeToTakeSnapshot == 0)
             {
-                _patternMemos.Add(TakeSnapshot());
+                 _patternMemos.Add(TakeSnapshot());
                 _remainingTimeToTakeSnapshot = null;
             }
+
+            return this;
         }
 
-        public CellStates State => _state;
-
-        public Cell Act()
-        {
-            //var newState = EvaluateNewState();
-            //if (newState == _state) return this;
-            return new Cell(this, EvaluateNewState());
-        }
-
-        private CellStates EvaluateNewState()
+        private CellStates EvaluateNewState(CellStates[] binaryField, int width, int height)
         {
             if (_state == CellStates.ReactivePositive || _state == CellStates.ReactiveNegative) return CellStates.Inactive;
             if (_state == CellStates.Active) return CellStates.Relaxed;
             if (_state == CellStates.Negative) return CellStates.RelaxedNegative;
             if ((_state == CellStates.Relaxed || State == CellStates.RelaxedNegative) && _remainingTimeToRelax == null) return CellStates.Inactive;
             if (_state == CellStates.Relaxed || _state == CellStates.RelaxedNegative) return _state;
+
+            _trackingField.SetBinaryField(binaryField, width, height);
 
             foreach (var memo in _patternMemos)
             {

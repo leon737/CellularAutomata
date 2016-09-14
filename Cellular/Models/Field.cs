@@ -45,15 +45,26 @@ namespace Cellular.Models
         public void RunIteration()
         {
             cnt = 0;
-            var newField = new Cell[Width, Height];
+            var binaryField = MakeBinaryField();
 
             Parallel.For(0, Width, i =>
             {
                 for (int j = 0; j < Height; ++j)
-                    newField[i, j] = _cells[i, j].Act();
+                    _cells[i, j] = _cells[i, j].Act(binaryField, Width, Height);
+                    //_cells[i, j] = _cells[i, j].Act(null, 0, 0);
             });
+        }
 
-            _cells = newField;
+        private CellStates[] MakeBinaryField()
+        {
+            var field = new CellStates[Width*Height];
+            for (int y = 0; y < Height; ++y)
+                for (int x = 0; x < Width; ++x)
+                {
+                    var state = _cells[x, y]._state;
+                    field[y * Width + x] = state;
+                }
+            return field;
         }
 
         public CellStates GetCellState(int x, int y)
