@@ -70,10 +70,14 @@ namespace WindowsFormsApplication2
 
         private void canvas_MouseClick(object sender, MouseEventArgs e)
         {
-            var trackingField = new TrackingField(_fieldOptions.TrackingRadius, e.X, e.Y, _field.GetCellState);
-            var actuator = new CellActuator(_fieldOptions.ActivationThreshold, new Random().NextDouble(), _fieldOptions.MemoRecognizationThreshold);
-            var cell = new Cell(trackingField, actuator, _fieldOptions.TimeToRelax, _fieldOptions.TimeToTakeSnapshot, CellStates.Active);
-            _field.SetCell(e.X, e.Y, cell);
+            for (int x = -5; x < 5; ++x)
+                for (int y = -5; y < 5; ++y)
+                {
+                    var trackingField = new TrackingField(_fieldOptions.TrackingRadius, e.X+x, e.Y+y, _field.GetCellState);
+                    var actuator = new CellActuator(_fieldOptions.ActivationThreshold, new Random().NextDouble(), _fieldOptions.MemoRecognizationThreshold);
+                    var cell = new Cell(trackingField, actuator, _fieldOptions.TimeToRelax, _fieldOptions.TimeToTakeSnapshot, CellStates.Active);
+                    _field.SetCell(e.X + x, e.Y + y, cell);
+                }
             RedrawField();
         }
 
@@ -81,14 +85,21 @@ namespace WindowsFormsApplication2
         {
             if (e.Button == MouseButtons.Left)
             {
-                var trackingField = new TrackingField(_fieldOptions.TrackingRadius, e.X, e.Y, _field.GetCellState);
-                var actuator = new CellActuator(_fieldOptions.ActivationThreshold, new Random().NextDouble(), _fieldOptions.MemoRecognizationThreshold);
-                var cell = new Cell(trackingField, actuator, _fieldOptions.TimeToRelax, _fieldOptions.TimeToTakeSnapshot, CellStates.Active);
-                _field.SetCell(e.X, e.Y, cell);
-                using (var g = canvas.CreateGraphics())
-                {
-                    g.FillRectangle(Brushes.Red, e.X, e.Y, 1, 1);
-                }
+                for (int x = -5; x < 5; ++x)
+                    for (int y = -5; y < 5; ++y)
+                    {
+                        var trackingField = new TrackingField(_fieldOptions.TrackingRadius, e.X+x, e.Y+y,
+                            _field.GetCellState);
+                        var actuator = new CellActuator(_fieldOptions.ActivationThreshold, new Random().NextDouble(),
+                            _fieldOptions.MemoRecognizationThreshold);
+                        var cell = new Cell(trackingField, actuator, _fieldOptions.TimeToRelax,
+                            _fieldOptions.TimeToTakeSnapshot, CellStates.Active);
+                        _field.SetCell(e.X+x, e.Y+y, cell);
+                        using (var g = canvas.CreateGraphics())
+                        {
+                            g.FillRectangle(Brushes.Red, e.X+x, e.Y+y, 1, 1);
+                        }
+                    }
             }
         }
 
@@ -160,6 +171,36 @@ namespace WindowsFormsApplication2
             _worker.CancelAsync();
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            for (int x = 200; x < 300; ++x)
+            {
+                for (int y = 250; y < 260; ++y)
+                {
+                    ActivateCellAt(x, y);
+                }
+            }
 
+            for (int y = 200; y < 300; ++y)
+            {
+                for (int x= 250; x < 260; ++x)
+                {
+                    ActivateCellAt(x, y);
+                }
+            }
+
+            RedrawField();
+        }
+
+        private void ActivateCellAt(int x, int y)
+        {
+            var trackingField = new TrackingField(_fieldOptions.TrackingRadius, x, y,
+                            _field.GetCellState);
+            var actuator = new CellActuator(_fieldOptions.ActivationThreshold, new Random().NextDouble(),
+                _fieldOptions.MemoRecognizationThreshold);
+            var cell = new Cell(trackingField, actuator, _fieldOptions.TimeToRelax,
+                _fieldOptions.TimeToTakeSnapshot, CellStates.Active);
+            _field.SetCell(x, y, cell);
+        }
     }
 }

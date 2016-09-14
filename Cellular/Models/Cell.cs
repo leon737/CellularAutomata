@@ -6,7 +6,7 @@ namespace Cellular.Models
 {
     public class Cell
     {
-        public readonly CellStates _state;
+        public CellStates _state;
 
         private readonly List<PatternMemo> _patternMemos;
 
@@ -86,6 +86,7 @@ namespace Cellular.Models
                 _remainingTimeToTakeSnapshot = null;
             }
 
+            _state = newState;
             return this;
         }
 
