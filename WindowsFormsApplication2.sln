@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplication2", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cellular", "Cellular\Cellular.csproj", "{733667D4-B217-4B03-8E1E-8D7A693E96F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CellularAutomataTests", "CellularAutomataTests\CellularAutomataTests.csproj", "{C409D518-A800-492B-A24C-3130F3BE0DD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{733667D4-B217-4B03-8E1E-8D7A693E96F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{733667D4-B217-4B03-8E1E-8D7A693E96F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{733667D4-B217-4B03-8E1E-8D7A693E96F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C409D518-A800-492B-A24C-3130F3BE0DD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C409D518-A800-492B-A24C-3130F3BE0DD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C409D518-A800-492B-A24C-3130F3BE0DD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C409D518-A800-492B-A24C-3130F3BE0DD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
